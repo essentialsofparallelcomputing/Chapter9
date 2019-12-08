@@ -75,5 +75,7 @@ ax.legend(['Pinned Benchmark', 'Pageable Benchmark', 'Gen3 Theoretical Peak', 'G
 plt.title( 'Theoretical and Benchmark Bandwidth\n', 
            fontdict=title_properties )
 plt.savefig("PCIe_Bandwidth.svg")
+plt.savefig("PCIe_Bandwidth.png", dpi=900)
+plt.savefig("PCIe_Bandwidth.jpg")
 plt.show()
 
