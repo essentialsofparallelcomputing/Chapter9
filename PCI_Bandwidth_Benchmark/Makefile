@@ -2,5 +2,11 @@ CC=nvcc
 OPT=-O2
 
 
-pci_bw : PCI_Bandwidth_Benchmark.c
-	${CC} ${OPT} PCI_Bandwidth_Benchmark.c -o $@
+%.o : %.c
+	${CC} -c ${OPT} $<
+
+pci_bw : PCI_Bandwidth_Benchmark.o timer.o
+	${CC} ${OPT} $< -o $^
+
+clean:
+	rm -rf *.o
