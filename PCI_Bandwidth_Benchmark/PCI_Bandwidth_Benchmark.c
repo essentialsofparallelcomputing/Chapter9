@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/time.h>
+#include <time.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <assert.h>
-#include <timer.h>
+#include "timer.h"
 
 #define BILLION 1000000000.0;
 
@@ -40,7 +40,9 @@ void Host_to_Device_Pinned( int N, double *copy_time )
    struct timespec tstart;
 
 // Allocate space for an array on the CPU
-   cudaMallocHost((void**)&x_host, N*sizeof(float));
+   cudaError_t status = cudaMallocHost((void**)&x_host, N*sizeof(float));
+   if (status != cudaSuccess)
+         printf("Error allocating pinned host memory\n");
 // Allocate space for an array on the GPU
    cudaMalloc((void **)&x_device, N*sizeof(float));
 
@@ -49,7 +51,6 @@ void Host_to_Device_Pinned( int N, double *copy_time )
       cudaMemcpy(x_device, x_host, N*sizeof(float), cudaMemcpyHostToDevice); 
    }
    cudaDeviceSynchronize();
-   clock_gettime(CLOCK_REALTIME, &t1);
 
    *copy_time = cpu_timer_stop(tstart)/1000.0;
 
@@ -69,10 +70,10 @@ void H2D_Pageable_Experiments( float *bandwidth, int n_experiments, int max_arra
 
          Host_to_Device_Pageable( array_size, &copy_time );
 
-          byte_size=4.0f*array_size;
-          bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0f*1024.0f*1024.0f );
+         byte_size=4.0f*array_size;
+         bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0f*1024.0f*1024.0f );
 
-          array_size = array_size*2;
+         array_size = array_size*2;
       }
    }
 }
@@ -121,7 +122,7 @@ void Calculate_Mean_and_Variance( float *bandwidth, float *mean_bandwidth, float
 void main()
 {
    const int max_array_size = 28; // Max array size
-   const int n_experiments  = 10; // Number of experiments to base mean and standard deviation on 
+   const int n_experiments  =  8; // Number of experiments to base mean and standard deviation on 
    long long array_size;
    int i;
    float byte_size;
@@ -146,6 +147,9 @@ void main()
       array_size=array_size*2;
    }
    fclose( fp );
+
+   H2D_Pinned_Experiments( bandwidth, n_experiments, max_array_size );    
+   Calculate_Mean_and_Variance( bandwidth, mean_bandwidth, variance_bandwidth, max_array_size, n_experiments );
 
    fp = fopen("h2d_bandwidth_pinned.csv","w");
    fprintf( fp, " Array Size (B), Bandwidth Mean (GB/s), Bandwidth Variance (GB/s)\n" );
