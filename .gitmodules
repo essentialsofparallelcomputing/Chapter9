@@ -1,0 +1,6 @@
+[submodule "BabelStream"]
+	path = BabelStream
+	url = git@github.com:UoB-HPC/BabelStream.git
+[submodule "cs-roofline-toolkit"]
+	path = cs-roofline-toolkit
+	url = https://bitbucket.org/berkeleylab/cs-roofline-toolkit/
