@@ -1,0 +1,154 @@
+{
+   "empirical": {
+      "gbytes": {
+         "data": [
+            [
+               "L1", 
+               2846.29
+            ], 
+            [
+               "DRAM", 
+               793.07
+            ]
+         ], 
+         "metadata": {
+            "TIMESTAMP_DATA": [
+               1576437057.68, 
+               1576437073.37, 
+               1576437041.68
+            ], 
+            "GPU_THREADS": 64, 
+            "FLOPS": 1, 
+            "GPU_BLOCKS": 2560, 
+            "TIMESTAMP_DB": 1576440168.307179
+         }
+      }, 
+      "gflops": {
+         "data": [
+            [
+               "FP64 GFLOPs", 
+               6648.24
+            ]
+         ], 
+         "metadata": {
+            "TIMESTAMP_DATA": [
+               1576439502.79, 
+               1576439440.99, 
+               1576439564.67
+            ], 
+            "GPU_THREADS": 1024, 
+            "FLOPS": 512, 
+            "GPU_BLOCKS": 160, 
+            "TIMESTAMP_DB": 1576440168.306741
+         }
+      }, 
+      "metadata": {
+         "ERT_VERSION": "1.1.0", 
+         "HOSTNAME": [
+            "cn2020", 
+            [], 
+            [
+               "192.168.100.220"
+            ]
+         ], 
+         "CONFIG": {
+            "ERT_WORKING_SET_MIN": [
+               "128"
+            ], 
+            "ERT_CFLAGS": [
+               "-O3"
+            ], 
+            "ERT_CC": [
+               "nvcc"
+            ], 
+            "ERT_BLOCKS_THREADS": [
+               "163840"
+            ], 
+            "ERT_FLOPS": [
+               "1,2,4,8,16,32,64,128,256,512"
+            ], 
+            "ERT_WSS_MULT": [
+               1.1
+            ], 
+            "ERT_HIP": [
+               false
+            ], 
+            "ERT_RESULTS": [
+               "Results.V100_gpu"
+            ], 
+            "ERT_MEMORY_MAX": [
+               "1073741824"
+            ], 
+            "ERT_LDFLAGS": [], 
+            "ERT_LDLIBS": [], 
+            "ERT_RUN": [
+               "./ERT_CODE"
+            ], 
+            "ERT_OCL": [
+               false
+            ], 
+            "ERT_GPU_THREADS": [
+               "64,128,256,512,1024"
+            ], 
+            "ERT_MPI": [
+               false
+            ], 
+            "ERT_TRIALS_MIN": [
+               "1"
+            ], 
+            "ERT_DRIVER": [
+               "driver1"
+            ], 
+            "ERT_GPU_LDFLAGS": [], 
+            "ERT_OPENMP": [
+               false
+            ], 
+            "ERT_GPU_CFLAGS": [
+               "-x", 
+               "cu", 
+               "-arch=sm_70"
+            ], 
+            "ERT_KERNEL": [
+               "kernel1"
+            ], 
+            "ERT_PRECISION": [
+               "FP64"
+            ], 
+            "ERT_LD": [
+               "nvcc"
+            ], 
+            "ERT_NUM_EXPERIMENTS": [
+               "3"
+            ], 
+            "ERT_GPU": [
+               "True"
+            ], 
+            "ERT_ALIGN": [
+               "32"
+            ], 
+            "ERT_GNUPLOT": [
+               "gnuplot"
+            ], 
+            "ERT_GPU_BLOCKS": [
+               "80,160,320,640,1280,2560"
+            ]
+         }, 
+         "UNAME": [
+            "Linux", 
+            "cn2020", 
+            "4.14.0-115.10.1.el7a.ppc64le", 
+            "#1 SMP Wed Jun 26 09:32:17 UTC 2019", 
+            "ppc64le", 
+            "ppc64le"
+         ]
+      }
+   }, 
+   "spec": {
+      "gbytes": {
+         "data": []
+      }, 
+      "gflops": {
+         "data": []
+      }
+   }
+}
