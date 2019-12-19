@@ -4,3 +4,6 @@
 [submodule "cs-roofline-toolkit"]
 	path = cs-roofline-toolkit
 	url = https://bitbucket.org/berkeleylab/cs-roofline-toolkit/
+[submodule "mixbench"]
+	path = mixbench
+	url = https://github.com/ekondis/mixbench.git
