@@ -34,7 +34,7 @@ V100_gflops = []
 V100_bandwidth = []
 
 # Collect the data from the file, ignore empty lines
-data = open('V100-power9.out', 'r')
+data = open('V100-power9.data', 'r')
 
 for line in data:
     if re.match('^      ',line):
@@ -59,7 +59,7 @@ plt.text(max_V100_bandwidth+20, max_V100_gflops+20, "V100")
 Vega20_gflops = []
 Vega20_bandwidth = []
 
-data = open('Vega20.out', 'r')
+data = open('Vega20.data', 'r')
 
 for line in data:
     if re.match('^      ',line):
@@ -84,7 +84,7 @@ plt.text(max_Vega20_bandwidth-110, max_Vega20_gflops+20, "Vega20")
 P100_gflops = []
 P100_bandwidth = []
 
-data = open('P100.out', 'r')
+data = open('P100.data', 'r')
 
 for line in data:
     if re.match('^      ',line):
@@ -109,7 +109,7 @@ plt.text(max_P100_bandwidth-80, max_P100_gflops+10, "P100")
 GeForce_GTX1080Ti_gflops = []
 GeForce_GTX1080Ti_bandwidth = []
 
-data = open('GeForce_GTX1080Ti.out', 'r')
+data = open('GeForce_GTX1080Ti.data', 'r')
 
 for line in data:
     if re.match('^      ',line):
@@ -134,7 +134,7 @@ plt.text(max_GeForce_GTX1080Ti_bandwidth+10, max_GeForce_GTX1080Ti_gflops+10, "G
 Quadro_K6000_gflops = []
 Quadro_K6000_bandwidth = []
 
-data = open('Quadro_K6000.out', 'r')
+data = open('Quadro_K6000.data', 'r')
 
 for line in data:
     if re.match('^      ',line):
