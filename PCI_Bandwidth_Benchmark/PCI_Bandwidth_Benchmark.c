@@ -9,16 +9,14 @@
 void Host_to_Device_Pageable( int N, double *copy_time )
 {
    float *x_host, *x_device;
-   long long i;
    struct timespec tstart;
 
-// Allocate space for an array on the CPU
+// Allocate space for arrays on the CPU
    x_host = (float*)malloc(N*sizeof(float));
-// Allocate space for an array on the GPU
    cudaMalloc((void **)&x_device, N*sizeof(float));
 
    cpu_timer_start(&tstart);
-   for( i = 1; i <= 1000; i++ ){
+   for(int i = 1; i <= 1000; i++ ){
       cudaMemcpy(x_device, x_host, N*sizeof(float), cudaMemcpyHostToDevice); 
    }
    cudaDeviceSynchronize();
@@ -32,18 +30,16 @@ void Host_to_Device_Pageable( int N, double *copy_time )
 void Host_to_Device_Pinned( int N, double *copy_time )
 {
    float *x_host, *x_device;
-   long long i;
    struct timespec tstart;
 
-// Allocate space for an array on the CPU
+// Allocate space for arrays on the CPU
    cudaError_t status = cudaMallocHost((void**)&x_host, N*sizeof(float));
    if (status != cudaSuccess)
          printf("Error allocating pinned host memory\n");
-// Allocate space for an array on the GPU
    cudaMalloc((void **)&x_device, N*sizeof(float));
 
    cpu_timer_start(&tstart);
-   for( i = 1; i <= 1000; i++ ){
+   for(int i = 1; i <= 1000; i++ ){
       cudaMemcpy(x_device, x_host, N*sizeof(float), cudaMemcpyHostToDevice); 
    }
    cudaDeviceSynchronize();
@@ -54,62 +50,57 @@ void Host_to_Device_Pinned( int N, double *copy_time )
    cudaFree( x_device );
 }
 
-void H2D_Pageable_Experiments( float *bandwidth, int n_experiments, int max_array_size ){
-   int i, j;
+void H2D_Pageable_Experiments( double *bandwidth, int n_experiments, int max_array_size ){
    long long array_size;
-   float byte_size;
    double copy_time;
 
-   for( j=0; j<n_experiments; j++){
+   for(int j=0; j<n_experiments; j++){
       array_size = 1;
-      for( i=0; i<max_array_size; i++ ){
+      for(int i=0; i<max_array_size; i++ ){
 
          Host_to_Device_Pageable( array_size, &copy_time );
 
-         byte_size=4.0f*array_size;
-         bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0f*1024.0f*1024.0f );
+         double byte_size=4.0*array_size;
+         bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0*1024.0*1024.0 );
 
          array_size = array_size*2;
       }
    }
 }
 
-void H2D_Pinned_Experiments( float *bandwidth, int n_experiments, int max_array_size ){
-   int i, j;
+void H2D_Pinned_Experiments( double *bandwidth, int n_experiments, int max_array_size ){
    long long array_size;
-   float byte_size;
    double copy_time;
 
-   for( j=0; j<n_experiments; j++){
+   for(int j=0; j<n_experiments; j++){
       array_size = 1;
-      for( i=0; i<max_array_size; i++ ){
+      for(int i=0; i<max_array_size; i++ ){
 
          Host_to_Device_Pinned( array_size, &copy_time );
 
-         byte_size=4.0f*array_size;
-         bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0f*1024.0f*1024.0f );
+         double byte_size=4.0*array_size;
+         bandwidth[i+j*max_array_size] = byte_size/( copy_time*1024.0*1024.0*1024.0 );
 
          array_size = array_size*2;
       }
    }
 }
 
-void Calculate_Mean_and_Variance( float *bandwidth, float *mean_bandwidth, float *variance_bandwidth, int max_array_size, int n_experiments ){
-   int i, j;
+void Calculate_Mean_and_Variance( double *bandwidth, double *mean_bandwidth, double *variance_bandwidth, int max_array_size, int n_experiments ){
 
-   for( i=0; i<max_array_size; i++ ){
+   for(int i=0; i<max_array_size; i++ ){
       mean_bandwidth[i]   = 0.0f;
       variance_bandwidth[i] = 0.0f;
    }
 
-   for( j=0; j<n_experiments; j++){
-      for( i=0; i<max_array_size; i++ ){
+   for(int j=0; j<n_experiments; j++){
+      for(int i=0; i<max_array_size; i++ ){
          mean_bandwidth[i] += bandwidth[i+j*max_array_size]/n_experiments;
       }
     }
 
-    for( j=0; j<n_experiments; j++){
-       for( i=0; i<max_array_size; i++ ){
+    for(int j=0; j<n_experiments; j++){
+       for(int i=0; i<max_array_size; i++ ){
           variance_bandwidth[i] += (bandwidth[i+j*max_array_size]-mean_bandwidth[i])*(bandwidth[i+j*max_array_size]-mean_bandwidth[i])/n_experiments;
        }
     }
@@ -120,26 +111,27 @@ void main()
    const int max_array_size = 20; // Max array size
    const int n_experiments  =  2; // Number of experiments to base mean and standard deviation on 
    long long array_size;
-   int i;
-   float byte_size;
-   float* bandwidth;
-   float* mean_bandwidth;
-   float* variance_bandwidth;
+   double* bandwidth;
+   double* mean_bandwidth;
+   double* variance_bandwidth;
    FILE   *fp;
 
-   bandwidth          = (float*)malloc(n_experiments*max_array_size*sizeof(float));
-   mean_bandwidth     = (float*)malloc(max_array_size*sizeof(float));
-   variance_bandwidth = (float*)malloc(max_array_size*sizeof(float));
+   bandwidth          = (double*)malloc(n_experiments*max_array_size*sizeof(double));
+   mean_bandwidth     = (double*)malloc(max_array_size*sizeof(double));
+   variance_bandwidth = (double*)malloc(max_array_size*sizeof(double));
 
    H2D_Pageable_Experiments( bandwidth, n_experiments, max_array_size );    
    Calculate_Mean_and_Variance( bandwidth, mean_bandwidth, variance_bandwidth, max_array_size, n_experiments );
 
    fp = fopen("h2d_bandwidth_pageable.csv","w");
+   printf("h2d_bandwidth_pageable\n");
    array_size=1;
    fprintf( fp, " Array Size (B), Bandwidth Mean (GB/s), Bandwidth Variance (GB/s)\n" );
-   for( i=0; i<max_array_size; i++ ){
-      byte_size=4.0f*array_size;
-      fprintf( fp, " %f, %f, %f\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
+   printf( " Array Size (B), Bandwidth Mean (GB/s), Bandwidth Variance (GB/s)\n" );
+   for(int i=0; i<max_array_size; i++ ){
+      double byte_size=4.0*array_size;
+      fprintf( fp, " %lf, %lf, %lf\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
+      printf( " %lf, %lf, %lf\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
       array_size=array_size*2;
    }
    fclose( fp );
@@ -148,11 +140,14 @@ void main()
    Calculate_Mean_and_Variance( bandwidth, mean_bandwidth, variance_bandwidth, max_array_size, n_experiments );
 
    fp = fopen("h2d_bandwidth_pinned.csv","w");
+   printf("\nh2d_bandwidth_pinned\n");
    fprintf( fp, " Array Size (B), Bandwidth Mean (GB/s), Bandwidth Variance (GB/s)\n" );
+   printf( " Array Size (B), Bandwidth Mean (GB/s), Bandwidth Variance (GB/s)\n" );
    array_size=1;
-   for( i=0; i<max_array_size; i++ ){
-      byte_size=4.0f*array_size;
-      fprintf( fp, " %f, %f, %f\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
+   for(int i=0; i<max_array_size; i++ ){
+      double byte_size=4.0*array_size;
+      fprintf( fp, " %lf, %lf, %lf\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
+      printf( " %lf, %lf, %lf\n", byte_size, mean_bandwidth[i], variance_bandwidth[i] );
       array_size=array_size*2;
    }
    fclose( fp );
