@@ -31,10 +31,6 @@ for line in data:
 print(energy, "watts-secs", simps(gpu_power, gpu_time))
 print(nominal_energy, "watts-secs", "  ratio ",energy/nominal_energy*100.0)
         
-print(gpu_power)
-print(sm_utilization)
-print(gpu_time)
-
 ax1.plot(gpu_time, gpu_power, "o", linestyle='-', color='red')
 ax1.fill_between(gpu_time, gpu_power, color='orange')
 ax1.set_xlabel('Time (secs)',fontsize=16)
