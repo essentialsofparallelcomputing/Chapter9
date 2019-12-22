@@ -109,8 +109,8 @@ void Calculate_Mean_and_Variance( double **bandwidth, double *mean_bandwidth, do
 
 void main()
 {
-   const int max_array_size = 20; // Max array size
-   const int n_experiments  =  2; // Number of experiments to base mean and standard deviation on 
+   const int max_array_size = 28; // Max array size
+   const int n_experiments  =  8; // Number of experiments to base mean and standard deviation on 
    long long array_size;
    double** bandwidth;
    double* mean_bandwidth;
