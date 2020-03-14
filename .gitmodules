@@ -1,6 +1,6 @@
 [submodule "BabelStream"]
 	path = BabelStream
-	url = git@github.com:UoB-HPC/BabelStream.git
+	url = https://github.com/UoB-HPC/BabelStream.git
 [submodule "cs-roofline-toolkit"]
 	path = cs-roofline-toolkit
 	url = https://bitbucket.org/berkeleylab/cs-roofline-toolkit/
@@ -9,4 +9,4 @@
 	url = https://github.com/ekondis/mixbench.git
 [submodule "CloverLeaf"]
 	path = CloverLeaf
-	url = git@github.com:UK-MAC/CloverLeaf.git
+	url = https://github.com/UK-MAC/CloverLeaf.git
