@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS builder
+FROM debian:bullseye
 WORKDIR /project
 RUN apt-get update -q && DEBIAN_FRONTEND=noninteractive \
     apt-get install -q -y cmake git vim gcc g++ software-properties-common && \
@@ -6,7 +6,6 @@ RUN apt-get update -q && DEBIAN_FRONTEND=noninteractive \
     rm -rf /var/lib/apt/lists/*
 
 # Installing latest GCC compiler (version 10) for best vectorization
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt-get update -q && \
     apt-get install -q -y gcc-10 g++-10 gfortran-10 && \
     apt-get clean && \
