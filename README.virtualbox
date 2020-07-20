@@ -1,72 +1,78 @@
+# These are instructions to setup a Ubuntu virtual machine for the examples in
+# this chapter. The first part of the instructions must be done manually. The
+# last half can be done by executing this file as a script as instructed.
 
-Download VirtualBox and install
+# Download VirtualBox and install
 
-Download Ubuntu desktop install and save on local disk [ubuntu-18.04.2-desktop-amd64.iso]
+# Download Ubuntu desktop install and save on local disk [ubuntu-20.04-desktop-amd64.iso]
+# Download VBoxGuestAdditions.iso
+# On Mac already at /Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
 
-Setup new machine
+# Setup new machine
+# See the README.autovirtualbox script for directions for setting up base virtual machine
 
-Click on New
+# sign in
 
-Type in a name [chapter5]
-Select Linux and Ubuntu 64-bit
+# click through whats new
 
-Select the amount of memory [4096]
+# select dots at bottom left and start up a terminal
 
-Create a virtual hard disk now
-Select VDI VirtualBox Disk Image
-
-Select Fixed Size Disk
-Select 10 GB
-
-Should see the new virtual machine added to the list
-
-Start Ubuntu virtual machine (Green arrow, start)
-
-Select iso file saved earlier [ubuntu-18.04.2-desktop-amd64.iso]
-
-Select Install Ubuntu
-
-Keyboard -- continue
-
-Select minimal, download updates while installing and install third-party
-
-Select Erase disk and install Ubuntu
-Select Install Now
-
-Select timezone
-
-Your name [chapter5]
-Your computer's name [chapter5-virtualbox]
-Username [chapter5]
-password [chapter5]
-Select "Require my password to log in"
-
-Select continue
-
-Long time ....
-
-Installation is complete, Restart computer
-
-sign in
-
-click through whats new
-
-select dots at bottom left and terminal
+# Reboot to get cut and paste and screen size fixed
 
 sudo apt-get update
 sudo apt-get install gcc make
 
-If Software updater prompts, install updated software --> wait ....
+# Add user to sudo list if needed
+# su
+# visudo
+# add %vboxsf ALL=(ALL) ALL
+# exit
 
-Make virtualbox window active and select devices from window menus at top of screen
-    Shared Clipboard --> bidirectional
-    Drag and Drop --> bidirectional
-    Install guest additions
-    Remove optical disk -- from desktop, right click and eject or from devices-->optical disk-->remove disk from virtual drive
-    reboot and test copy paste
-Copy on Mac is command-C and paste in Ubuntu is shift-ctrl-v
+# sudo apt-get install -y git
 
-sudo apt-get install -y bash cmake git vim
+# Need script on guest to execute
+# git clone --recursive https://github.com/essentialsofparallelcomputing/Chapter8.git
+# Run the script Chapter8/README.virtualbox
 
-git clone https://github.com/essentialsofparallelcomputing/Chapter5.git
+DEBIAN_FRONTEND=noninteractive
+sudo apt-get -qq update && \
+sudo apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
+                        mpich libmpich-dev \
+                        openmpi-bin openmpi-doc libopenmpi-dev && \
+sudo apt-get clean && \
+sudo rm -rf /var/lib/apt/lists/*
 
+# Installing latest GCC compiler (version 10)
+sudo apt-get -qq update && \
+sudo apt-get -qq install -y gcc-10 g++-10 gfortran-10 && \
+sudo apt-get clean && \
+DEBIAN_FRONTEND=noninteractive
+sudo apt-get -qq update && \
+sudo apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
+                        mpich libmpich-dev \
+                        openmpi-bin openmpi-doc libopenmpi-dev && \
+sudo apt-get clean && \
+sudo rm -rf /var/lib/apt/lists/*
+
+# Installing latest GCC compiler (version 10)
+sudo apt-get -qq update && \
+sudo apt-get -qq install -y gcc-10 g++-10 gfortran-10 && \
+sudo apt-get clean && \
+sudo rm -rf /var/lib/apt/lists/*
+
+sudo update-alternatives --install /usr/bin/gcc       gcc       /usr/bin/gcc-10 90 \
+                         --slave   /usr/bin/g++       g++       /usr/bin/g++-10 \
+                         --slave   /usr/bin/gfortran  gfortran  /usr/bin/gfortran-10 \
+                         --slave   /usr/bin/gcov      gcov      /usr/bin/gcov-10
+sudo rm -rf /var/lib/apt/lists/*
+
+sudo update-alternatives --install /usr/bin/gcc       gcc       /usr/bin/gcc-10 90 \
+                         --slave   /usr/bin/g++       g++       /usr/bin/g++-10 \
+                         --slave   /usr/bin/gfortran  gfortran  /usr/bin/gfortran-10 \
+                         --slave   /usr/bin/gcov      gcov      /usr/bin/gcov-10
+
+# If Software updater prompts, install updated software --> wait ....
+
+source ~/.bash_profile
+
+cd Chapter9; #make
