@@ -1,0 +1,22 @@
+All: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA
+
+.PHONY: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA
+
+BabelStream_CUDA:
+	cd BabelStream && make -f CUDA.make && ./cuda-stream
+
+Roofline_CUDA:
+	cd cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0 && \
+	  cp ../../config.V100_gpu Config && ./ert Config/config.V100_gpu && \
+	  ghostscript Results.config.Vega20_gpu/Run.001/roofline.ps
+
+mixbench_CUDA:
+	cd mixbench && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
+
+PCI_Bandwidth_Benchmark_CUDA:
+	cd PCI_Bandwidth_Benchmark && make && ./PCI_Bandwidth_Benchmark
+
+clean:
+	cd BabelStream; make clean
+	cd mixbench; make clean
+	cd PCI_Bandwidth_Benchmark; make clean
