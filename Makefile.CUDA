@@ -1,6 +1,6 @@
-All: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA
+All: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA CloverLeaf_Power9
 
-.PHONY: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA
+.PHONY: BabelStream_CUDA Roofline_CUDA mixbench_CUDA PCI_Bandwidth_Benchmark_CUDA CloverLeaf_Power9
 
 BabelStream_CUDA:
 	cd BabelStream && make -f CUDA.make && ./cuda-stream
@@ -15,6 +15,9 @@ mixbench_CUDA:
 
 PCI_Bandwidth_Benchmark_CUDA:
 	cd PCI_Bandwidth_Benchmark && make && ./PCI_Bandwidth_Benchmark
+
+CloverLeaf_Power9:
+	./CloverLeaf_Power9_batch.sh
 
 clean:
 	cd BabelStream; make clean
