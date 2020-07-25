@@ -1,4 +1,5 @@
-All: Makefile.CUDA Makefile.OpenCL CloverLeaf_Ivybridge CloverLeaf_Skylake
+#All: Makefile.CUDA Makefile.OpenCL CloverLeaf_Ivybridge CloverLeaf_Skylake
+All: CloverLeaf_Ivybridge CloverLeaf_Skylake
 
 .PHONY: Makefile.CUDA Makefile.OpenCL
 
