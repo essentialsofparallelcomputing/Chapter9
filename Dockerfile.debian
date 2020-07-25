@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN sed -i "/^deb/s/main/main non-free/" /etc/apt/sources.list
 RUN apt-get -qq update && \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
-            wget gnupg-agent ghostscript \
+            wget gnupg-agent ghostscript likwid \
             mpich libmpich-dev \
             openmpi-bin openmpi-doc libopenmpi-dev && \
     apt-get clean && \

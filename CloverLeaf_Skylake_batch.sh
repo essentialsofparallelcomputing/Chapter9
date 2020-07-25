@@ -2,7 +2,11 @@
 
 cd CloverLeaf/CloverLeaf_MPI
 make clean
-make COMPILER=INTEL
+if [ `which icc |wc -l` == 1 ]; then
+  make COMPILER=INTEL
+else
+  make COMPILER=GNU
+fi
 
 PROB=clover_bm64
 
