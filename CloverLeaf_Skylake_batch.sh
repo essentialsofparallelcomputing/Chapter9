@@ -2,7 +2,7 @@
 
 cd CloverLeaf/CloverLeaf_MPI
 make clean
-if [ `which icc |wc -l` == 1 ]; then
+if [ `which icc |wc -l` = 1 ]; then
   make COMPILER=INTEL
 else
   make COMPILER=GNU
