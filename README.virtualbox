@@ -34,7 +34,7 @@
 DEBIAN_FRONTEND=noninteractive
 sudo -qq apt-get update && \
 sudo -qq apt-get install -y cmake git vim gcc g++ gfortran software-properties-common \
-             wget gnupg-agent ghostscript xpdf likwid \
+             wget gnupg-agent ghostscript likwid \
              mpich libmpich-dev \
              openmpi-bin openmpi-doc libopenmpi-dev
 
