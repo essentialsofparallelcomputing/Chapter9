@@ -34,19 +34,13 @@
 DEBIAN_FRONTEND=noninteractive
 sudo -qq apt-get update && \
 sudo -qq apt-get install -y cmake git vim gcc g++ gfortran software-properties-common \
-             wget gnupg-agent \
+             wget gnupg-agent ghostscript xpdf likwid \
              mpich libmpich-dev \
-             openmpi-bin openmpi-doc libopenmpi-dev && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+             openmpi-bin openmpi-doc libopenmpi-dev
 
 # Installing latest GCC compiler (version 8) for best vectorization
-sudo apt-get -qq update && \
 sudo apt-get -qq install -y gcc-8 g++-8 gfortran-8 \
-                            gcc-9 g++-9 gfortran-9 \
-                            gcc-10 g++-10 gfortran-10 && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+                            gcc-10 g++-10 gfortran-10
 
 sudo update-alternatives --install /usr/bin/gcc       gcc       /usr/bin/gcc-8 90 \
                          --slave   /usr/bin/g++       g++       /usr/bin/g++-8 \
@@ -58,7 +52,7 @@ sudo update-alternatives --install /usr/bin/gcc       gcc       /usr/bin/gcc-10 
                          --slave   /usr/bin/gfortran  gfortran  /usr/bin/gfortran-10 \
                          --slave   /usr/bin/gcov      gcov      /usr/bin/gcov-10
 
-# Installing Intel compiler since it gives the best vectorization across compiler vendors
+# Intel graphics software for computation
 #pushd /tmp
 wget -q https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
 sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
@@ -69,22 +63,11 @@ echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sourc
 echo "deb [trusted=yes arch=amd64] https://repositories.intel.com/graphics/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/intel-graphics.list
 sudo -qq apt-get update && \
 sudo -qq apt-get install -y \
-             intel-basekit-getting-started \
-             intel-hpckit-getting-started \
-             intel-oneapi-common-vars \
-             intel-oneapi-common-licensing \
-             intel-oneapi-dev-utilities \
-             intel-oneapi-icc \
-             intel-oneapi-ifort \
-             intel-opencl && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+             intel-opencl
 
 # Generic OpenCL Loader
 sudo apt-get update && \
-sudo apt-get install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
 
 # Nvidia GPU software for computation
 sudo wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
@@ -93,28 +76,22 @@ sudo RUN dpkg -i cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
 
 sudo apt-get -qq update && \
 sudo apt-get -qq install -y cuda-toolkit-10-2 cuda-tools-10-2 cuda-compiler-10-2 \
-         cuda-libraries-10-2 cuda-libraries-dev-10-2 libnvidia-compute-450 && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+         cuda-libraries-10-2 cuda-libraries-dev-10-2 libnvidia-compute-450
 
 # ROCm software installation
 sudo apt-get -qq update && \
-sudo apt-get -qq install -y libnuma-dev && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get -qq install -y libnuma-dev
 
 sudo wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
 sudo echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/r
 sudo apt-get -qq update && \
-sudo apt-get -qq install -y rocm-opencl-dev rocm-dkms && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get -qq install -y rocm-opencl-dev rocm-dkms
 
 # Vendor OpenCL
 sudo apt-get -qq update && \
-sudo apt-get -qq install -y mesa-opencl-icd && \
-sudo apt-get clean && \
-sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get -qq install -y mesa-opencl-icd
+
+sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
 
 # If Software updater prompts, install updated software --> wait ....
 

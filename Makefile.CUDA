@@ -8,7 +8,7 @@ BabelStream_CUDA:
 Roofline_CUDA:
 	cd cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0 && \
 	  cp ../../config.V100_gpu Config && ./ert Config/config.V100_gpu && \
-	  ghostscript Results.config.Vega20_gpu/Run.001/roofline.ps
+	  ps2pdf Results.config.Vega20_gpu/Run.001/roofline.ps && xpdf roofline.pdf
 
 mixbench_CUDA:
 	cd mixbench && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
