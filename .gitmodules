@@ -4,3 +4,9 @@
 [submodule "mixbench"]
 	path = mixbench
 	url = https://github.com/ekondis/mixbench.git
+[submodule "BabelSream"]
+	path = BabelSream
+	url = https://github.com/UoB-HPC/BabelStream.git
+[submodule "CloverLeaf"]
+	path = CloverLeaf
+	url = https://github.com/UK-MAC/CloverLeaf.git

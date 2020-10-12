@@ -47,20 +47,20 @@ RUN update-alternatives \
       --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-10     && \
     chmod u+s /usr/bin/update-alternatives
 
-# Intel graphics software for computation
-RUN wget -q https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-RUN apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-RUN rm -f GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-RUN echo "deb https://apt.repos.intel.com/oneapi all main" >> /etc/apt/sources.list.d/oneAPI.list
-RUN echo "deb [trusted=yes arch=amd64] https://repositories.intel.com/graphics/ubuntu bionic main" >> /etc/apt/sources.list.d/intel-graphics.list
+## Intel graphics software for computation
+#RUN wget -q https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+#RUN apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+#RUN rm -f GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+#RUN echo "deb https://apt.repos.intel.com/oneapi all main" >> /etc/apt/sources.list.d/oneAPI.list
+#RUN echo "deb [trusted=yes arch=amd64] https://repositories.intel.com/graphics/ubuntu bionic main" >> /etc/apt/sources.list.d/intel-graphics.list
 
-RUN apt-get -qq update && \
-    apt-get -qq install -y \
-            intel-opencl
+#RUN apt-get -qq update && \
+#    apt-get -qq install -y \
+#            intel-opencl
 
-# Generic OpenCL Loader
-RUN apt-get -qq update && \
-    apt-get -qq install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
+## Generic OpenCL Loader
+#RUN apt-get -qq update && \
+#    apt-get -qq install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
 
 # Nvidia GPU software for computation
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
@@ -68,20 +68,20 @@ RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2
 RUN DEBIAN_FRONTEND=noninteractive \
    apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb
 
-# ROCm software installation
-RUN apt-get -qq update && \
-    apt-get -qq install -y libnuma-dev
+## ROCm software installation
+#RUN apt-get -qq update && \
+#    apt-get -qq install -y libnuma-dev
 
-RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
-RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
-RUN apt-get update -q && \
-    apt-get install -q -y rocm-opencl-dev rocm-dkms
+#RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
+#RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
+#RUN apt-get update -q && \
+#    apt-get install -q -y rocm-opencl-dev rocm-dkms
 
-# Vendor OpenCL
-RUN apt-get -qq update && \
-    apt-get -qq install -y mesa-opencl-icd
+## Vendor OpenCL
+#RUN apt-get -qq update && \
+#    apt-get -qq install -y mesa-opencl-icd
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 
