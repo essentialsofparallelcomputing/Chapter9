@@ -7,3 +7,6 @@
 [submodule "CloverLeaf"]
 	path = CloverLeaf
 	url = https://github.com/UK-MAC/CloverLeaf.git
+[submodule "BabelStream"]
+	path = BabelStream
+	url = https://github.com/UoB-HPC/BabelStream.git

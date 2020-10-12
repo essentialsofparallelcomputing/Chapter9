@@ -20,7 +20,6 @@ RUN apt-get -qq update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
             wget gnupg-agent ghostscript evince likwid \
-            mpich libmpich-dev \
             openmpi-bin openmpi-doc libopenmpi-dev
 
 # Installing latest GCC compiler (version 10)
