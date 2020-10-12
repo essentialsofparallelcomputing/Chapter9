@@ -1,28 +1,51 @@
+# Part of the examples from the Parallel and High Performance Computing
+# Robey and Zamora, Manning Publications
+#   https://github.com/EssentialsofParallelComputing/Chapter5
+#
+# The built image can be found at:
+#
+#   https://hub.docker.com/r/essentialsofparallelcomputing/chapter5
+#
+# Author:
+# Bob Robey <brobey@earthlink.net>
+
 FROM ubuntu:20.04 AS builder
-WORKDIR /project
-ENV DEBIAN_FRONTEND=noninteractive
+LABEL maintainer Bob Robey <brobey@earthlink.net>
+
+ARG DOCKER_LANG=en_US
+ARG DOCKER_TIMEZONE=America/Denver
+
+WORKDIR /tmp
 RUN apt-get -qq update && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
             wget gnupg-agent ghostscript evince likwid \
             mpich libmpich-dev \
             openmpi-bin openmpi-doc libopenmpi-dev
 
-# Installing latest GCC compiler (version 8) for latest compatible with CUDA
-RUN apt-get -qq install -y gcc-8 g++-8 gfortran-8 \
-                           gcc-10 g++-10 gfortran-10
+# Installing latest GCC compiler (version 10)
+RUN apt-get -qq update && \
+    apt-get -qq install -y gcc-8 g++-8 gfortran-8 \
+                           gcc-10 g++-10 gfortran-10 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# We can use the update-alternatives to switch between compiler versions
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 \
-                        --slave /usr/bin/g++ g++ /usr/bin/g++-8 \
-                        --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-8 \
-                        --slave /usr/bin/gcov gcov /usr/bin/gcov-8
-
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 70 \
-                        --slave /usr/bin/g++ g++ /usr/bin/g++-10 \
-                        --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-10 \
-                        --slave /usr/bin/gcov gcov /usr/bin/gcov-10
-
-RUN chmod u+s /usr/bin/update-alternatives
+# Problem with compile of compact hash neighbor with gcc-10
+RUN update-alternatives \
+      --install /usr/bin/gcc      gcc      /usr/bin/gcc-8       90 \
+      --slave   /usr/bin/g++      g++      /usr/bin/g++-8          \
+      --slave   /usr/bin/gfortran gfortran /usr/bin/gfortran-8     \
+      --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-8      && \
+    update-alternatives \
+      --install /usr/bin/gcc      gcc      /usr/bin/gcc-9       80 \
+      --slave   /usr/bin/g++      g++      /usr/bin/g++-9          \
+      --slave   /usr/bin/gfortran gfortran /usr/bin/gfortran-9     \
+      --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-9      && \
+    update-alternatives \
+      --install /usr/bin/gcc      gcc      /usr/bin/gcc-10      70 \
+      --slave   /usr/bin/g++      g++      /usr/bin/g++-10         \
+      --slave   /usr/bin/gfortran gfortran /usr/bin/gfortran-10    \
+      --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-10     && \
+    chmod u+s /usr/bin/update-alternatives
 
 # Intel graphics software for computation
 RUN wget -q https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
@@ -40,12 +63,10 @@ RUN apt-get -qq update && \
     apt-get -qq install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
 
 # Nvidia GPU software for computation
-RUN wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-RUN dpkg -i cuda-repo-ubuntu1804_10.2.89-1_amd64.deb
-RUN apt-get -qq update && \
-    apt-get -qq install -y cuda-toolkit-10-2 cuda-tools-10-2 cuda-compiler-10-2 \
-        cuda-libraries-10-2 cuda-libraries-dev-10-2 libnvidia-compute-450
+RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
+RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb
+RUN DEBIAN_FRONTEND=noninteractive \
+   apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb
 
 # ROCm software installation
 RUN apt-get -qq update && \
