@@ -1,0 +1,53 @@
+#!/bin/sh
+# Sets up Ubuntu 20.04 from bare-bones installation 
+# Comment out what you don't need or run line-by-line, manually
+sudo apt-get -qq update && \
+export DEBIAN_FRONTEND=noninteractive \
+sudo apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
+             wget gnupg-agent ghostscript evince likwid \
+             mpich libmpich-dev \
+             openmpi-bin openmpi-doc libopenmpi-dev
+
+sudo apt-get -qq install -y gcc-8 g++-8 gfortran-8 \
+                            gcc-10 g++-10 gfortran-10
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90 \
+                         --slave /usr/bin/g++ g++ /usr/bin/g++-8 \
+                         --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-8 \
+                         --slave /usr/bin/gcov gcov /usr/bin/gcov-8
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 80 \
+                         --slave /usr/bin/g++ g++ /usr/bin/g++-9 \
+                         --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-9 \
+                         --slave /usr/bin/gcov gcov /usr/bin/gcov-9
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 70 \
+                         --slave /usr/bin/g++ g++ /usr/bin/g++-10 \
+                         --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-10 \
+                         --slave /usr/bin/gcov gcov /usr/bin/gcov-10
+
+sudo chmod u+s /usr/bin/update-alternatives
+
+# Nvidia GPU software for computation
+# See https://docs.nvidia.com/hpc-sdk/index.html for Nvidia install instructions
+sudo wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
+sudo wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb
+
+sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
+
+export NVARCH=Linux_x86_64
+export NVCOMPILERS=/opt/nvidia/hpc_sdk
+export MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
+export PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
+
+#Put these in your dotfiles:
+
+echo "export NVARCH=`uname -s`_`uname -m`"
+echo "export NVCOMPILERS=/opt/nvidia/hpc_sdk"
+echo "export MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man"
+echo "export PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH"
+
+make clean
+make

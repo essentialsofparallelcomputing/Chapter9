@@ -20,7 +20,9 @@ RUN apt-get -qq update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
             wget gnupg-agent ghostscript evince likwid \
-            openmpi-bin openmpi-doc libopenmpi-dev
+            mpich libmpich-dev \
+            openmpi-bin openmpi-doc libopenmpi-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Installing latest GCC compiler (version 10)
 RUN apt-get -qq update && \
@@ -62,19 +64,22 @@ RUN update-alternatives \
 #    apt-get -qq install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
 
 # Nvidia GPU software for computation
+# See https://docs.nvidia.com/hpc-sdk/index.html for Nvidia install instructions
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb
 RUN DEBIAN_FRONTEND=noninteractive \
-   apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb
+   apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
+   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## ROCm software installation
 #RUN apt-get -qq update && \
 #    apt-get -qq install -y libnuma-dev
 
-#RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
-#RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
-#RUN apt-get update -q && \
-#    apt-get install -q -y rocm-opencl-dev rocm-dkms
+RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
+RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
+RUN apt-get update -q && \
+    apt-get install -q -y rocm-opencl-dev rocm-dkms && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Vendor OpenCL
 #RUN apt-get -qq update && \
@@ -92,8 +97,10 @@ WORKDIR /home/chapter9
 RUN chown -R chapter9:chapter9 /home/chapter9
 USER chapter9
 ENV PATH=${PATH}:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64
-ENV PATH=/usr/local/cuda-10.2/bin:/usr/local/cuda-10.2/NsightCompute-2019.1${PATH:+:${PATH}}
-ENV LD_LIBRARY_PATH=/usr/local/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+ENV NVARCH=Linux_x86_64
+ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
+ENV MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
+ENV PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
 
 RUN git clone --recursive https://github.com/essentialsofparallelcomputing/Chapter9.git
 
