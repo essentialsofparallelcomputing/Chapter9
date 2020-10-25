@@ -17,7 +17,7 @@ Roofline_OpenCL:
 	  ps2pdf Results.Vega20_gpu/Run.001/roofline.ps && evince roofline.pdf
 
 mixbench_OPENCL:
-	cd mixbench/mixbench-opencl && make OPENCL_INSTALL_PATH=`oclinfo`/.. && ./mixbench-opencl-ro
+	cd mixbench/mixbench-opencl && make OPENCL_INSTALL_PATH=`clinfo`/.. && ./mixbench-opencl-ro
 
 clean:
 	cd BabelStream; make clean
