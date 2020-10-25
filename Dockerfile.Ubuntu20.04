@@ -30,7 +30,7 @@ RUN ln -fs /usr/share/zoneinfo/$DOCKER_TIMEZONE /etc/localtime && \
 
 ENV LC_ALL=$DOCKER_LANG.UTF-8
 
-RUN apt-get -qq update && \
+RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common wget gnupg-agent \
             2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince gnuplot likwid \
@@ -96,8 +96,8 @@ RUN apt-get -qq update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
-RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list && \
-    apt-get update -q && \
+RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
+RUN apt-get update -q && \
     apt-get install -q -y rocm-opencl-dev rocm-dkms && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 

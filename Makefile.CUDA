@@ -17,7 +17,7 @@ Roofline_CUDA:
 	  ps2pdf Results.V100_gpu/Run.001/roofline.ps && evince roofline.pdf
 
 mixbench_CUDA:
-	cd mixbench && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
+	cd mixbench/mixbench-cuda && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
 
 PCI_Bandwidth_Benchmark_CUDA:
 	cd PCI_Bandwidth_Benchmark && make && ./PCI_Bandwidth_Benchmark
