@@ -145,6 +145,12 @@ RUN update-alternatives \
       --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-10     && \
     chmod u+s /usr/bin/update-alternatives
 
+## Generic OpenCL Loader
+#RUN apt-get -qq update && \
+#    apt-get -qq install clinfo opencl-headers && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
+##    apt-get -qq install -y clinfo ocl-icd-libopencl1 ocl-icd-* opencl-headers
+
 # Nvidia GPU software for computation
 # See https://docs.nvidia.com/hpc-sdk/index.html for Nvidia install instructions
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
@@ -152,6 +158,27 @@ RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+## ROCm software installation
+RUN apt-get -qq update && \
+    apt-get -qq install -y libnuma-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
+RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
+RUN apt-get update -q && \
+    apt-get install -q -y rocm-opencl-dev rocm-dkms && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ocl-icd-libopencl1 \
+        clinfo \
+        opencl-headers \
+        ocl-icd-opencl-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /etc/OpenCL/vendors && \
+    echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
 
 ########################################################
 # Customization for user and location
