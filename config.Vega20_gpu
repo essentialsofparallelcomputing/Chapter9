@@ -5,7 +5,7 @@ ERT_RESULTS Results.Vega20_gpu
 ERT_DRIVER  driver1
 ERT_KERNEL  kernel1.cl
 
-ERT_FLOPS   1,256,512
+ERT_FLOPS   1,8,64,512
 ERT_ALIGN   32
 
 ERT_CC      g++

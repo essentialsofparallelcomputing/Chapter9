@@ -14,7 +14,7 @@ Roofline_OpenCL:
           sed -i -e "s!subprocess.PIPE!subprocess.PIPE, encoding='utf8'!" Python/ert_utils.py && \
           sed -i -e "/META_DATA/s!\] ==!\].strip() ==!" -e '/len(lines.i/s!\]) ==!\].strip()) ==!' Python/ert_core.py && \
 	  ./ert Config/config.Vega20_gpu && \
-	  ps2pdf Results.Vega20_gpu/Run.001/roofline.ps && evince roofline.ps
+	  ps2pdf Results.Vega20_gpu/Run.001/roofline.ps && evince roofline.pdf
 
 mixbench_OPENCL:
 	cd mixbench && make OPENCL_INSTALL_PATH=`oclinfo`/.. && ./mixbench-opencl-ro
