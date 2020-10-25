@@ -18,8 +18,22 @@ ARG DOCKER_TIMEZONE=America/Denver
 WORKDIR /tmp
 RUN apt-get -qq update && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common \
-            wget gnupg-agent ghostscript evince likwid \
+    apt-get -qq install -y locales tzdata && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=$DOCKER_LANG.UTF-8 \
+    LANGUAGE=$DOCKER_LANG:UTF-8
+
+RUN ln -fs /usr/share/zoneinfo/$DOCKER_TIMEZONE /etc/localtime && \
+    locale-gen $LANG && update-locale LANG=$LANG && \
+    dpkg-reconfigure -f noninteractive locales tzdata
+
+ENV LC_ALL=$DOCKER_LANG.UTF-8
+
+RUN apt-get -qq update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common wget gnupg-agent \
+            2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince likwid \
             mpich libmpich-dev \
             openmpi-bin openmpi-doc libopenmpi-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -85,8 +99,6 @@ RUN apt-get update -q && \
 #RUN apt-get -qq update && \
 #    apt-get -qq install -y mesa-opencl-icd
 
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
 SHELL ["/bin/bash", "-c"]
 
 RUN groupadd chapter9 && useradd -m -s /bin/bash -g chapter9 chapter9
@@ -96,6 +108,12 @@ RUN usermod -a -G video chapter9
 WORKDIR /home/chapter9
 RUN chown -R chapter9:chapter9 /home/chapter9
 USER chapter9
+
+ENV LANG='en_US.UTF-8'
+ENV DISPLAY :0
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES display,graphics,utility,compute
+
 ENV PATH=${PATH}:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64
 ENV NVARCH=Linux_x86_64
 ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
