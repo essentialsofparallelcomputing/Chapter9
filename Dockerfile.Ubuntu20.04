@@ -33,8 +33,7 @@ ENV LC_ALL=$DOCKER_LANG.UTF-8
 RUN apt-get -qq update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common wget gnupg-agent \
-            2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince likwid \
-            mpich libmpich-dev \
+            2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince gnuplot likwid \
             openmpi-bin openmpi-doc libopenmpi-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -49,12 +48,12 @@ RUN apt-get -qq update && \
 
 # Problem with compile of compact hash neighbor with gcc-10
 RUN update-alternatives \
-      --install /usr/bin/gcc      gcc      /usr/bin/gcc-8       90 \
+      --install /usr/bin/gcc      gcc      /usr/bin/gcc-8       80 \
       --slave   /usr/bin/g++      g++      /usr/bin/g++-8          \
       --slave   /usr/bin/gfortran gfortran /usr/bin/gfortran-8     \
       --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-8      && \
     update-alternatives \
-      --install /usr/bin/gcc      gcc      /usr/bin/gcc-9       80 \
+      --install /usr/bin/gcc      gcc      /usr/bin/gcc-9       90 \
       --slave   /usr/bin/g++      g++      /usr/bin/g++-9          \
       --slave   /usr/bin/gfortran gfortran /usr/bin/gfortran-9     \
       --slave   /usr/bin/gcov     gcov     /usr/bin/gcov-9      && \
@@ -85,8 +84,8 @@ RUN update-alternatives \
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
 RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb
 RUN DEBIAN_FRONTEND=noninteractive \
-   apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
-   apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## ROCm software installation
 #RUN apt-get -qq update && \
@@ -101,6 +100,15 @@ RUN apt-get update -q && \
 ## Vendor OpenCL
 #RUN apt-get -qq update && \
 #    apt-get -qq install -y mesa-opencl-icd
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ocl-icd-libopencl1 \
+        clinfo \
+        ocl-icd-opencl-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /etc/OpenCL/vendors && \
+    echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
 
 SHELL ["/bin/bash", "-c"]
 
