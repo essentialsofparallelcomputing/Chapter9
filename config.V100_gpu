@@ -9,7 +9,7 @@ ERT_GPU         True
 ERT_GPU_CFLAGS  -x cu -arch=sm_70
 ERT_GPU_LDFLAGS 
 
-ERT_FLOPS   1,2,4,8,16,32,64,128,256,512
+ERT_FLOPS   1,8,64,512
 ERT_ALIGN   32
 
 ERT_CC      nvcc

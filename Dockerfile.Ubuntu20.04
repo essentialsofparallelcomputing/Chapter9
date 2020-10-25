@@ -83,9 +83,9 @@ RUN update-alternatives \
 
 # Nvidia GPU software for computation
 # See https://docs.nvidia.com/hpc-sdk/index.html for Nvidia install instructions
-RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb
-RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb && \
+    wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -95,8 +95,8 @@ RUN apt-get -qq update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN wget -qO - http://repo.radeon.com/rocm/apt/debian/rocm.gpg.key | apt-key add -
-RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list
-RUN apt-get update -q && \
+RUN echo 'deb [arch=amd64] http://repo.radeon.com/rocm/apt/debian/ xenial main' >> /etc/apt/sources.list.d/rocm.list && \
+    apt-get update -q && \
     apt-get install -q -y rocm-opencl-dev rocm-dkms && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -125,15 +125,16 @@ RUN chown -R chapter9:chapter9 /home/chapter9
 USER chapter9
 
 ENV LANG='en_US.UTF-8'
-ENV DISPLAY :0
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES display,graphics,utility,compute
+ENV DISPLAY=:0 \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=display,graphics,utility,compute
 
 ENV PATH=${PATH}:/opt/rocm/bin:/opt/rocm/profiler/bin:/opt/rocm/opencl/bin/x86_64
-ENV NVARCH=Linux_x86_64
-ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
-ENV MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
-ENV PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
+
+ENV NVARCH=Linux_x86_64 \
+    NVCOMPILERS=/opt/nvidia/hpc_sdk \
+    MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man \
+    PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
 
 RUN git clone --recursive https://github.com/essentialsofparallelcomputing/Chapter9.git
 
