@@ -7,7 +7,12 @@ BabelStream_CUDA:
 
 Roofline_CUDA:
 	cd cs-roofline-toolkit/Empirical_Roofline_Tool-1.1.0 && \
-	  cp ../../config.V100_gpu Config && ./ert Config/config.V100_gpu && \
+	  cp ../../config.V100_gpu Config && \
+          2to3 -w ert Python Scripts && \
+          sed -i -e 's!len(msec_med)/2!len(msec_med)//2!' Scripts/preprocess.py && \
+          sed -i -e "s!subprocess.PIPE!subprocess.PIPE, encoding='utf8'!" Python/ert_utils.py && \
+          sed -i -e "/META_DATA/s!\] ==!\].strip() ==!" -e '/len(lines.i/s!\]) ==!\].strip()) ==!' Python/ert_core.py && \
+          ./ert Config/config.V100_gpu && \
 	  ps2pdf Results.config.Vega20_gpu/Run.001/roofline.ps && evince roofline.pdf
 
 mixbench_CUDA:
