@@ -17,15 +17,15 @@ Roofline_CUDA:
 	  ps2pdf Results.V100_gpu/Run.001/roofline.ps && evince roofline.pdf
 
 mixbench_CUDA:
-	cd mixbench/mixbench-cuda && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
+	cd mixbench/mixbench-cuda && mkdir build && cd build && cmake .. && make CUDA_INSTALL_PATH=`nvcc`/.. && ./mixbench-cuda-ro
 
 PCI_Bandwidth_Benchmark_CUDA:
-	cd PCI_Bandwidth_Benchmark && make && ./PCI_Bandwidth_Benchmark
+	cd PCI_Bandwidth_Benchmark && make && ./pci_bw
 
 CloverLeaf_Power9:
 	./CloverLeaf_Power9_batch.sh
 
 clean:
+	cd mixbench/mixbench-cuda && rm -rf build
 	cd BabelStream; make clean
-	cd mixbench; make clean
 	cd PCI_Bandwidth_Benchmark; make clean
