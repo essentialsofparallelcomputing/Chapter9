@@ -96,6 +96,7 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 # Also, fix issue with Shift-Tab not working
 # https://askubuntu.com/questions/839842/vnc-pressing-shift-tab-tab-only
 RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
     apt-get install -y libxtst-dev libssl-dev libjpeg-dev && \
     \
     mkdir -p /tmp/x11vnc-0.9.14 && \
@@ -113,7 +114,7 @@ RUN apt-get update && \
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get -qq install -y cmake git vim gcc g++ gfortran software-properties-common wget gnupg-agent \
-            2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince gnuplot likwid \
+            2to3 python3-pip python3-matplotlib python3-numpy ghostscript evince gnuplot-nox likwid \
             mpich libmpich-dev \
             openmpi-bin openmpi-doc libopenmpi-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -159,7 +160,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-## ROCm software installation
+# ROCm software installation
 RUN apt-get -qq update && \
     apt-get -qq install -y libnuma-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -204,6 +205,8 @@ RUN groupadd -g $DOCKER_GID $DOCKER_GROUP && \
     echo "$DOCKER_TIMEZONE" > /etc/timezone && \
     ln -s -f /usr/share/zoneinfo/$DOCKER_TIMEZONE /etc/localtime
 
+RUN usermod -a -G video chapter9
+
 ADD image/etc /etc
 ADD image/usr /usr
 ADD image/sbin /sbin
@@ -225,6 +228,12 @@ ENV NVARCH=Linux_x86_64
 ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
 ENV MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
 ENV PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
+ENV DISPLAY=:0
+ENV NVIDIA_VISIBLE_DEVICES=all 
+ENV NVIDIA_DRIVER_CAPABILITIES=display,graphics,utility,compute
+ENV CUDA_INCLUDE_DIRS=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/include
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib
+ENV CUDA_CUDART_LIBRARY=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib/libcudart.so
 
 RUN git clone --recursive https://github.com/essentialsofparallelcomputing/Chapter9.git
 

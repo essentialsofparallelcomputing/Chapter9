@@ -21,6 +21,7 @@ docker run -d --init --rm \
   --env HOST_UID= \
   --env DOCKER_LANG=en_US \
   --env DOCKER_TIMEZONE=America/Denver \
+  --gpus all \
   $VOLUME_LIST \
   -w $CONTAINER_HOME/Chapter9 \
   --security-opt seccomp=unconfined --cap-add=SYS_PTRACE \
