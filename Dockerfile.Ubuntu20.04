@@ -1,10 +1,10 @@
 # Part of the examples from the Parallel and High Performance Computing
 # Robey and Zamora, Manning Publications
-#   https://github.com/EssentialsofParallelComputing/Chapter5
+#   https://github.com/EssentialsofParallelComputing/Chapter9
 #
 # The built image can be found at:
 #
-#   https://hub.docker.com/r/essentialsofparallelcomputing/chapter5
+#   https://hub.docker.com/r/essentialsofparallelcomputing/chapter9
 #
 # Author:
 # Bob Robey <brobey@earthlink.net>
@@ -74,7 +74,8 @@ RUN update-alternatives \
 
 #RUN apt-get -qq update && \
 #    apt-get -qq install -y \
-#            intel-opencl
+#            intel-opencl && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Generic OpenCL Loader
 #RUN apt-get -qq update && \
@@ -90,7 +91,7 @@ RUN wget --no-verbose https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2
     apt-get install -y ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-## ROCm software installation
+# ROCm software installation
 RUN apt-get -qq update && \
     apt-get -qq install -y libnuma-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -101,9 +102,10 @@ RUN apt-get update -q && \
     apt-get install -q -y rocm-opencl-dev rocm-dkms && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-## Vendor OpenCL
+# Vendor OpenCL
 #RUN apt-get -qq update && \
-#    apt-get -qq install -y mesa-opencl-icd
+#    apt-get -qq install -y mesa-opencl-icd && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ocl-icd-libopencl1 \
@@ -136,6 +138,7 @@ ENV NVARCH=Linux_x86_64
 ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
 ENV MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
 ENV PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${NVCOMPILERS}/${NVARCH}/20.9/cuda/11.0/extras/CUPTI/lib64
 
 RUN git clone --recursive https://github.com/essentialsofparallelcomputing/Chapter9.git
 
