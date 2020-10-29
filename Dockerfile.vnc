@@ -223,14 +223,16 @@ RUN mkdir -p $DOCKER_HOME/.config/mozilla && \
 WORKDIR $DOCKER_HOME
 
 USER $DOCKER_USER
+
 ENV LANG=$DOCKER_LANG.UTF-8
+ENV DISPLAY=:0
+ENV NVIDIA_VISIBLE_DEVICES=all 
+ENV NVIDIA_DRIVER_CAPABILITIES=display,graphics,utility,compute
+
 ENV NVARCH=Linux_x86_64
 ENV NVCOMPILERS=/opt/nvidia/hpc_sdk
 ENV MANPATH=$MANPATH:$NVCOMPILERS/$NVARCH/20.9/compilers/man
 ENV PATH=$NVCOMPILERS/$NVARCH/20.9/compilers/bin:$PATH
-ENV DISPLAY=:0
-ENV NVIDIA_VISIBLE_DEVICES=all 
-ENV NVIDIA_DRIVER_CAPABILITIES=display,graphics,utility,compute
 ENV CUDA_INCLUDE_DIRS=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/include
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib
 ENV CUDA_CUDART_LIBRARY=/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/cuda/11.0/targets/x86_64-linux/lib/libcudart.so
