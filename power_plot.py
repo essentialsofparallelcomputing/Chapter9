@@ -19,14 +19,17 @@ nominal_energy = 0.0
 for line in data:
     if re.match('^ 2019',line):
         line = line.rstrip("\n")
-        dummy, dummy, dummy, gpu_power_in, dummy, dummy,  sm_utilization_in, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy = line.split()
+        (dummy, dummy, dummy, gpu_power_in, dummy, dummy, sm_utilization_in,
+         dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy) = line.split()
         if (float(sm_utilization_in) > 80):
           gpu_power.append(float(gpu_power_in))
           sm_utilization.append(float(sm_utilization_in))
           gpu_time.append(count)
           count = count + 1
-          energy = energy + float(gpu_power_in)*1.0
-          nominal_energy = nominal_energy + float(300.0)*1.0
+          energy = (energy +
+                    float(gpu_power_in)*1.0)
+          nominal_energy = (nominal_energy + 
+                            float(300.0)*1.0)
 
 print(energy, "watts-secs", simps(gpu_power, gpu_time))
 print(nominal_energy, "watts-secs", "  ratio ",energy/nominal_energy*100.0)
